@@ -72,7 +72,7 @@ experiment files), status and results reporting.
 At times Claude.ai is used to create planning files and emitting
 task files.
 
-Repo:  https://github.com/jeffnye-gh/cachegen
+Repo:  https://github.com/uarchlabs/cachegen
 
 
 Task IDs use various prefixes:

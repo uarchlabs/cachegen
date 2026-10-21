@@ -48,7 +48,6 @@ YMMV.
 
 Plugs for my public repos, so far:
 
-- jeffnye-gh/cachegen 
 - jeffnye-gh/jnutils 
 - jeffnye-gh/testbench 
 - jeffnye-gh/performance-modeling
