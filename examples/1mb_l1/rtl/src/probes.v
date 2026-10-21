@@ -1,3 +1,8 @@
+// ==============================================================
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2022-2026 Jeff Nye, uarchlabs.com
+// SPDX-FileCopyrightText: 2022-2026 Jeff Nye <jeff@uarchlabs.com>
+// ==============================================================
 module _probes;
 //synthesis translate_off
 `include "bitcmds.h"

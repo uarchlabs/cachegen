@@ -1,3 +1,8 @@
+// ==============================================================
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2022-2026 Jeff Nye, uarchlabs.com
+// SPDX-FileCopyrightText: 2022-2026 Jeff Nye <jeff@uarchlabs.com>
+// ==============================================================
 // vi:syntax=verilog
 `ifndef SIM_CNTRL
 `define SIM_CNTRL 1

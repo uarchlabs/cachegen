@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# ==============================================================
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Jeff Nye, uarchlabs.com
+# SPDX-FileCopyrightText: 2026 Jeff Nye <jeff@uarchlabs.com>
+# ==============================================================
 """Reference geometry + tree-PLRU solve. Tables are constructed, not
 transcribed -- this is the piece VOCABULARY.md section 6 is about."""
 import json, math, hashlib, subprocess

@@ -1,0 +1,7 @@
+cachegen
+Copyright 2023-2026 Jeff Nye, uarchlabs
+
+This product includes software developed by third parties:
+- nlohmann/json (MIT License), cli/inc/nlohmann/json.hpp
+- JsonCpp (MIT License), examples/1mb_l1/model/src/jsoncpp.cpp,
+  examples/1mb_l1/model/inc/json/json.h

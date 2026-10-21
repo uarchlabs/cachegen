@@ -1,3 +1,8 @@
+// ==============================================================
+// SPDX-License-Identifier: Apache-2.0
+// Copyright (c) 2022-2026 Jeff Nye, uarchlabs.com
+// SPDX-FileCopyrightText: 2022-2026 Jeff Nye <jeff@uarchlabs.com>
+// ==============================================================
 `include "sim_cntrl.h"
 // -------------------------------------------------------------------------
 // cache 1MB, 4 way, 32B lines

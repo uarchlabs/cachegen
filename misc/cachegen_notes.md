@@ -1,3 +1,7 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0                         -->
+<!-- Copyright (c) 2026 Jeff Nye, uarchlabs.com                 -->
+<!-- SPDX-FileCopyrightText: 2026 Jeff Nye <jeff@uarchlabs.com> -->
+
   What's actually in tools/cachegen
 
   The generator the README advertises ("cmd line and Qt5 based") is not in this 

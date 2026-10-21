@@ -1,3 +1,7 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0                              -->
+<!-- Copyright (c) 2023-2026 Jeff Nye, uarchlabs.com                 -->
+<!-- SPDX-FileCopyrightText: 2023-2026 Jeff Nye <jeff@uarchlabs.com> -->
+
 Copyright (c) 2023 Jeff Nye
 
 Ultimately this is a repo for my cache generation tool, cmd line and Qt5 based,
@@ -67,3 +71,10 @@ make -j4
 make install
 ```
 
+## License
+
+Code and RTL are released under the Apache License 2.0 (see LICENSE).
+Documentation is released under CC BY 4.0.
+
+cachegen was relicensed from GPL-3.0 to Apache-2.0 on 2026-10-21.
+Versions up to the tag `gpl-3.0-final` remain available under GPL-3.0.
