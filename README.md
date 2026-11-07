@@ -2,74 +2,101 @@
 <!-- Copyright (c) 2023-2026 Jeff Nye, uarchlabs.com                 -->
 <!-- SPDX-FileCopyrightText: 2023-2026 Jeff Nye <jeff@uarchlabs.com> -->
 
-Copyright (c) 2023 Jeff Nye
+# cachegen
 
-Ultimately this is a repo for my cache generation tool, cmd line and Qt5 based,
-in progress but not in this repo yet.
+cachegen generates cache RTL from a configuration. Its command-line tool,
+`cgen`, reads a JSON description of a cache hierarchy and emits the
+SystemVerilog design, its testbenches and a Make build.
 
-I am releasing one example at the moment, a 1MB 4-way cache, w/ 32B lines, 
-tree PLRU, physical addressing. There are two levels in the RTL and model,
-the cache and a main memory block. There is nothing fancy in this example, 
-no sub-sectors, victim or store buffers. Before adding these I want to 
-verify capacity of the FPGA devices I have handy.
+It is also an experiment in how to spend an LLM's context. Caches are
+built from well-known organizations: tags, data arrays, valid bits,
+replacement state, MSHRs, fill and victim buffers. Having an implementation
+assistant write thousands of lines of cache RTL directly uses context in
+proportion to the size of the design, and drift between artifacts that
+must agree is the usual failure. The approach here is to specify the cache,
+let a deterministic generator emit the bulk of it, and have the assistant
+review and adapt the output. The generator contributes consistency; the
+assistant contributes judgment.
 
-The RTL has basic directed tests for all the major operations. The RTL is
-ready for randomized testing and physical implementation. I have some files
-for Quartus targetting Cyclone 5. I will be adding Xilinx and the open
-source tools as examples.
+The first configuration it targets is the cache hierarchy of
+[Pacino](https://github.com/uarchlabs/pacino), an 8-issue out-of-order
+RISC-V targeting RVA23S64.
 
-The RTL tests are directed and cover basic LD/ST hit, LD/ST allocation
-on miss clean, miss dirty,and some LRU testing.
-
-The functional model has similar tests for most of this except the write
-miss allocation operation still needs work. The c++ is in two parts,
-the functional model and the test case generator code.
-
-RTL implementation detail in examples/1mb_l1/rtl/README.txt.
-
-I spent some time getting a test bench mechanism that I like, that was
-race-free and extensible from handwritten directed tests to generation and
-playback of trace input files.
-
-The RTL coding has some artifacts due to aspects of Icarus Verilog. I like
-this tool but there are some things you need to account for when using 
-iVerilog + GTKW. Not a big deal but there are notes when I made tradeoffs 
-to accommodate the tools.
-
-One thing to mention again is that physical design has not been accounted
-for yet, some re-pipelining will occur when mapping from my implementation 
-using a mental model of what can be done in one pipestage in 28nm and what can 
-be done with reasonably priced FPGA boards. FYI.
-
-I have written both the RTL and the model in a style that I think makes it
-easier to comprehend while building efficient gates and fast models. I could 
-be off base, I've been doing this for a while so I may have forgotten what 
-is 'easy' to read and what is not. But in my real life I have also had to deal 
-with RTL and C++ written in the most god awful way, so I made some effort.
-YMMV.
-
-- Jeff
-
-Plugs for my public repos, so far:
-
-- jeffnye-gh/jnutils 
-- jeffnye-gh/testbench 
-- jeffnye-gh/performance-modeling
-
-# Installing tools
-
-## Verilator
-
-From $CGEN\_ROOT
+## Status
 
 ```
-cd tools/verilator
-unset VERILATOR_ROOT
-autoconf
-./configure --prefix="$PWD/.."
-make -j4
-make install
+  DONE         five-file input schema: system, topology, caches, ports, links
+  DONE         Pacino worked example (testcases/pacino)
+  DONE         cgen front half: load, resolve, check, derive
+  DONE         cgen emitter: RTL, testbenches, Make build
+  DONE         generation logs, including which configuration fields are used
+  NOT STARTED  C++ functional model backend
+  NOT STARTED  elaborated configuration output
+  NOT STARTED  GUI
 ```
+
+For the Pacino configuration, the emitted design lints clean, builds,
+elaborates and passes its generated tests. `planning/PROJECT_STATUS.md` is
+the current record, and `planning/arch/cgen_decisions.md` holds the design
+decisions.
+
+## Repository layout
+
+```
+  cli/                cgen source (C++), unit tests (googletest) and fixtures
+  planning/schema/    JSON schemas for the five input files, with examples
+  planning/arch/      cgen design decisions
+  testcases/pacino/   the Pacino cache configuration
+  examples/1mb_l1/    a hand-written reference cache (below)
+  prompts/            IA task files
+  session_handoffs/   PA session handoffs
+  templates/          task file and report templates
+  tools/              submodules: Verilator, googletest,
+                      json-schema-validator, jnutils
+```
+
+## Building cgen
+
+cgen needs a C++ compiler and Boost.ProgramOptions
+(`-lboost_program_options`).
+
+```
+git clone --recurse-submodules https://github.com/uarchlabs/cachegen
+cd cachegen/cli
+make            # builds cgen and its unit tests
+make test       # runs the unit tests
+make run        # checks the Pacino configuration end to end
+```
+
+Usage:
+
+```
+cgen --cmd={check,emit} --config=<file> [options]
+cgen --help
+```
+
+`check` loads, resolves and checks a configuration. `emit` also writes the
+RTL, testbenches and build.
+
+## Reference design: examples/1mb_l1
+
+The repository started in 2023 as a hand-written cache: 1 MB, 4-way,
+32-byte lines, tree PLRU, physical addressing, with a main memory block
+behind it. It has directed tests for load and store hits, allocation on
+clean and dirty misses, and LRU behavior; a C++ functional model with a
+test-case generator; and Quartus files for a Cyclone V (DE0-Nano-SoC). It
+was written for Icarus Verilog and GTKWave. `examples/1mb_l1/rtl/README.txt`
+describes the RTL.
+
+It is kept as a second data point for the generator: a cache organization
+written by hand, against which generated output can be compared.
+
+## Methodology
+
+cachegen is developed with the same planning assistant (PA) and
+implementation assistant (IA) flow as Pacino. Task files are in `prompts/`,
+PA handoffs in `session_handoffs/`, and the conventions in
+`planning/PROJECT_CORE.md`.
 
 ## License
 
